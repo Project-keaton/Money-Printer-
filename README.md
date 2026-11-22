@@ -9,7 +9,7 @@ rule-based and machine-learning trading strategies.
 
 ## Features
 
-- Historical data ingestion (Yahoo Finance via `yfinance`, CSV import)
+- Historical data pipeline: 10+ years of EUR/USD from Dukascopy, OANDA, Twelve Data or Alpha Vantage, saved as yearly CSVs
 - Technical-indicator strategies (EMA crossover, RSI) using `ta`
 - Machine-learning strategies (`scikit-learn`, `xgboost`)
 - Backtesting with spread, commission and slippage modelling
@@ -50,7 +50,8 @@ rule-based and machine-learning trading strategies.
 
 ```
 ForexBot/
-├── data/            # Historical market data (raw/ and processed/)
+├── data/            # Historical market data (EURUSD_<YEAR>.csv, raw/, processed/)
+├── data_pipeline/   # Historical data downloader (Dukascopy, OANDA, Twelve Data, Alpha Vantage)
 ├── strategies/      # Trading strategies (EMA, RSI, ML strategies)
 ├── backtests/       # Backtesting engine and test results
 ├── models/          # Machine learning models and training scripts
@@ -118,6 +119,20 @@ streamlit run dashboard/app.py
 pytest
 ```
 
+## Historical data pipeline
+
+`data_pipeline/` downloads 10+ years of EUR/USD candles (Dukascopy by default;
+OANDA, Twelve Data and Alpha Vantage also supported), validates them and saves
+one CSV per year to `data/`:
+
+```bash
+cp .env.example .env
+python -m data_pipeline            # download
+python -m data_pipeline --verify   # check data/EURUSD_<YEAR>.csv files
+```
+
+Full setup guide: [`data_pipeline/README.md`](data_pipeline/README.md).
+
 ## Configuration
 
 `config.yaml` contains sections for `app`, `logging`, `data`, `database`,
@@ -131,7 +146,7 @@ scripts, optional Docker setup).
 
 ## Roadmap
 
-- [ ] Data downloader and cleaning pipeline
+- [x] Historical data downloader and cleaning pipeline
 - [ ] `BaseStrategy` interface with EMA and RSI implementations
 - [ ] Vectorised backtest engine and performance metrics
 - [ ] ML feature pipeline and walk-forward training

@@ -45,6 +45,8 @@ logs/*
 *.db-journal
 
 # ---------- Data & generated output ----------
+data/**/*.csv
+data/**/*.tmp
 data/raw/*
 data/processed/*
 !data/raw/.gitkeep
