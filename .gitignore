@@ -46,6 +46,9 @@ logs/*
 
 # ---------- Data & generated output ----------
 data/**/*.csv
+!data/EURUSD_*.csv
+!data/weekday/
+!data/weekday/EURUSD_*.csv
 data/**/*.tmp
 data/raw/*
 data/processed/*
