@@ -1,0 +1,98 @@
+/* ForexBot dashboard - dark trading-terminal styling.
+   Colours match dashboard/charts/theme.py. */
+
+:root {
+  --fb-page: #0d0d0d;
+  --fb-surface: #1a1a19;
+  --fb-surface-raised: #242422;
+  --fb-border: #2c2c2a;
+  --fb-baseline: #383835;
+  --fb-ink: #f0efec;
+  --fb-ink-2: #c3c2b7;
+  --fb-muted: #898781;
+  --fb-gain: #3987e5;
+  --fb-loss: #e66767;
+  --fb-good: #0ca30c;
+  --fb-critical: #d03b3b;
+  --fb-warning: #fab219;
+  --fb-font: Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* Layout ---------------------------------------------------------------- */
+.block-container { padding-top: 2.2rem; padding-bottom: 3rem; max-width: 1500px; }
+section[data-testid="stSidebar"] { background: var(--fb-surface); border-right: 1px solid var(--fb-border); }
+h1, h2, h3 { letter-spacing: -0.01em; }
+
+/* Page header ------------------------------------------------------------- */
+.fb-header { margin: 0 0 1.25rem 0; }
+.fb-header .fb-eyebrow { color: var(--fb-muted); font: 600 0.72rem/1 var(--fb-font); text-transform: uppercase; letter-spacing: 0.08em; }
+.fb-header h1 { color: var(--fb-ink); font: 700 1.75rem/1.2 var(--fb-font); margin: 0.35rem 0 0.25rem 0; padding: 0; }
+.fb-header p { color: var(--fb-ink-2); font: 400 0.92rem/1.4 var(--fb-font); margin: 0; }
+
+.fb-section { color: var(--fb-ink); font: 600 1.05rem/1.3 var(--fb-font); margin: 1.6rem 0 0.15rem 0; }
+.fb-section-caption { color: var(--fb-muted); font: 400 0.82rem/1.4 var(--fb-font); margin: 0 0 0.6rem 0; }
+
+/* KPI cards --------------------------------------------------------------- */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--kpi-cols, 5), minmax(0, 1fr));
+  gap: 12px;
+  margin: 0.25rem 0 0.75rem 0;
+}
+@media (max-width: 1100px) { .kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 700px)  { .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.kpi-card {
+  background: var(--fb-surface);
+  border: 1px solid var(--fb-border);
+  border-radius: 10px;
+  padding: 14px 16px 13px 16px;
+  min-width: 0;
+  position: relative;
+}
+.kpi-card::before {
+  content: ""; position: absolute; left: 0; top: 12px; bottom: 12px; width: 3px; border-radius: 0 3px 3px 0;
+  background: var(--fb-baseline);
+}
+.kpi-card.positive::before { background: var(--fb-gain); }
+.kpi-card.negative::before { background: var(--fb-loss); }
+.kpi-label { color: var(--fb-muted); font: 600 0.70rem/1.2 var(--fb-font); text-transform: uppercase; letter-spacing: 0.07em; }
+.kpi-value {
+  color: var(--fb-ink); font: 700 1.55rem/1.2 var(--fb-font); margin: 6px 0 4px 0;
+  font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.kpi-foot { display: flex; align-items: center; gap: 8px; min-height: 20px; flex-wrap: wrap; }
+.kpi-caption { color: var(--fb-ink-2); font: 400 0.78rem/1.3 var(--fb-font); }
+.kpi-badge {
+  display: inline-flex; align-items: center; gap: 4px; padding: 1px 7px; border-radius: 999px;
+  font: 600 0.72rem/1.5 var(--fb-font); background: var(--fb-surface-raised); color: var(--fb-ink-2);
+  border: 1px solid var(--fb-baseline);
+}
+.kpi-badge .icon { font-size: 0.66rem; }
+.kpi-badge.positive .icon { color: var(--fb-good); }
+.kpi-badge.negative .icon { color: var(--fb-critical); }
+.kpi-badge.neutral .icon { color: var(--fb-muted); }
+
+/* Charts and tables ------------------------------------------------------- */
+div[data-testid="stPlotlyChart"] {
+  background: var(--fb-surface); border: 1px solid var(--fb-border); border-radius: 10px; overflow: hidden;
+}
+div[data-testid="stDataFrame"] { border: 1px solid var(--fb-border); border-radius: 10px; overflow: hidden; }
+
+/* Sidebar run card -------------------------------------------------------- */
+.fb-brand { display: flex; align-items: center; gap: 10px; margin: 0 0 0.5rem 0; }
+.fb-brand-mark {
+  width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center;
+  background: linear-gradient(135deg, #3987e5, #184f95); color: #fff; font: 800 0.95rem/1 var(--fb-font);
+}
+.fb-brand-name { color: var(--fb-ink); font: 700 1.05rem/1.1 var(--fb-font); }
+.fb-brand-sub { color: var(--fb-muted); font: 500 0.72rem/1.2 var(--fb-font); }
+
+.fb-run { background: var(--fb-page); border: 1px solid var(--fb-border); border-radius: 10px; padding: 10px 12px; margin: 0.4rem 0 0.6rem 0; }
+.fb-run-row { display: flex; justify-content: space-between; gap: 8px; font: 400 0.8rem/1.7 var(--fb-font); }
+.fb-run-row span:first-child { color: var(--fb-muted); }
+.fb-run-row span:last-child { color: var(--fb-ink); text-align: right; font-variant-numeric: tabular-nums; }
+.fb-pill {
+  display: inline-block; padding: 1px 8px; border-radius: 999px; font: 600 0.7rem/1.6 var(--fb-font);
+  background: rgba(250, 178, 25, 0.14); color: var(--fb-warning); border: 1px solid rgba(250, 178, 25, 0.35);
+}

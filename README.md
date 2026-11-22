@@ -12,9 +12,9 @@ rule-based and machine-learning trading strategies.
 - Historical data pipeline: 10+ years of EUR/USD from Dukascopy, OANDA, Twelve Data or Alpha Vantage, saved as yearly CSVs
 - Technical-indicator strategies (EMA crossover, RSI) using `ta`
 - Machine-learning strategies (`scikit-learn`, `xgboost`)
-- Backtesting with spread, commission and slippage modelling
+- Backtesting engine with spread, commission, slippage, SL/TP, risk-based sizing, full metrics and charts
 - SQLite persistence through SQLAlchemy
-- Interactive Streamlit + Plotly analytics dashboard
+- Dark-themed Streamlit + Plotly dashboard: KPIs, equity, trades, risk, monthly analytics, settings and data quality
 - Three run modes: `backtest`, `paper`, `live`
 
 ## Architecture
@@ -53,10 +53,10 @@ ForexBot/
 ├── data/            # Historical market data (EURUSD_<YEAR>.csv, raw/, processed/)
 ├── data_pipeline/   # Historical data downloader (Dukascopy, OANDA, Twelve Data, Alpha Vantage)
 ├── strategies/      # Trading strategies (EMA, RSI, ML strategies)
-├── backtests/       # Backtesting engine and test results
+├── backtests/       # Backtesting engine (python -m backtests)
 ├── models/          # Machine learning models and training scripts
 ├── logs/            # Application logs and trade logs
-├── dashboard/       # Streamlit dashboard and analytics
+├── dashboard/       # Streamlit dashboard (streamlit run dashboard/app.py)
 ├── database/        # SQLite database files and data-access layer
 ├── reports/         # Performance reports and exports
 ├── notebooks/       # Research and experimentation notebooks
@@ -133,6 +133,31 @@ python -m data_pipeline --verify   # check data/EURUSD_<YEAR>.csv files
 
 Full setup guide: [`data_pipeline/README.md`](data_pipeline/README.md).
 
+## Backtesting
+
+`backtests/` runs a strategy over the downloaded data with realistic costs and
+writes `reports/performance_report.txt`, `trades.csv`, `equity_curve.csv` and
+charts in `reports/charts/`:
+
+```bash
+python -m backtests                         # strategy and costs from config.yaml
+python -m backtests --strategy rsi_reversal
+```
+
+Full setup guide: [`backtests/README.md`](backtests/README.md).
+
+## Dashboard
+
+```bash
+streamlit run dashboard/app.py
+```
+
+Opens a local web dashboard (http://localhost:8501) with eight pages: Overview,
+Backtest Results, Trade History, Performance Analytics, Risk Analysis, Monthly
+Analytics, Strategy Settings and Data Management. Settings changed in the
+dashboard re-run the backtest instantly and can be saved to `config.yaml`.
+Guide: [`dashboard/README.md`](dashboard/README.md).
+
 ## Configuration
 
 `config.yaml` contains sections for `app`, `logging`, `data`, `database`,
@@ -147,9 +172,9 @@ scripts, optional Docker setup).
 ## Roadmap
 
 - [x] Historical data downloader and cleaning pipeline
-- [ ] `BaseStrategy` interface with EMA and RSI implementations
-- [ ] Vectorised backtest engine and performance metrics
+- [x] `Strategy` interface with EMA and RSI implementations and an ML model adapter
+- [x] Backtest engine, performance metrics, reports and charts
 - [ ] ML feature pipeline and walk-forward training
-- [ ] Streamlit dashboard
+- [x] Streamlit dashboard
 - [ ] Paper-trading broker integration
 - [ ] Live trading with risk controls

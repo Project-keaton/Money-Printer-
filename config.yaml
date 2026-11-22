@@ -1,5 +1,6 @@
 # ForexBot main configuration
 # Secrets (API keys, broker credentials) go in .env, NOT here.
+# Historical data download settings live in .env (see data_pipeline/README.md).
 
 app:
   name: ForexBot
@@ -7,47 +8,87 @@ app:
   timezone: UTC
 
 logging:
-  level: INFO
+  level: INFO               # DEBUG logs every fill; INFO logs every trade
+  log_dir: logs
   app_log: logs/app.log
-  trade_log: logs/trades.log
-
-data:
-  source: yfinance
-  symbols:
-    - EURUSD=X
-    - GBPUSD=X
-    - USDJPY=X
-  timeframe: 1h
-  start_date: "2020-01-01"
-  end_date: null            # null = up to today
-  raw_dir: data/raw
-  processed_dir: data/processed
 
 database:
   url: sqlite:///database/forexbot.db
 
-strategy:
-  active: ema_crossover
-  ema_crossover:
-    fast_period: 12
-    slow_period: 26
-  rsi:
-    period: 14
-    overbought: 70
-    oversold: 30
-
-risk:
-  initial_capital: 10000
-  risk_per_trade: 0.01      # 1% of equity per trade
-  max_open_trades: 3
-  stop_loss_pips: 30
-  take_profit_pips: 60
-
+# ---------------------------------------------------------------------------
+# Backtesting  (run: python -m backtests)
+# ---------------------------------------------------------------------------
 backtest:
-  spread_pips: 1.0
-  commission_per_lot: 7.0
-  slippage_pips: 0.2
-  results_dir: backtests/results
+  symbol: EURUSD
+  data_dir: data
+  dataset: weekday          # weekday = data/weekday (Mon-Fri candles) | raw = data/ (includes Sunday candles)
+  start_date: null          # "YYYY-MM-DD" or null for the first available candle
+  end_date: null            # "YYYY-MM-DD" or null for the last available candle
+  account_currency: USD
+  starting_balance: 10000
+
+  # Position rules
+  allow_multiple_positions: false   # false = at most one open trade at a time
+  max_open_trades: 3                # used when allow_multiple_positions is true
+  close_on_opposite_signal: true    # an opposite signal closes open trades before reversing
+  close_open_trades_at_end: true    # close anything still open on the last candle
+
+  # Instrument
+  contract_size: 100000     # units per standard lot
+  pip_size: null            # null = automatic (0.01 for JPY pairs, otherwise 0.0001)
+
+  # Analytics
+  risk_free_rate: 0.0       # annual rate used by the Sharpe ratio, e.g. 0.04 = 4%
+
+  # Output
+  reports_dir: reports
+  charts_dir: reports/charts
+
+# Broker cost model
+execution:
+  price_basis: mid          # mid = data are mid prices, half the spread is paid on every entry and exit
+                            # bid = data are bid prices, buys fill at bid + full spread
+  spread_pips: 1.0          # broker spread
+  commission_per_lot: 7.0   # round-turn commission per standard lot, in account currency
+  slippage_pips: 0.2        # adverse slippage on market and stop-loss fills (take-profit limits fill exactly)
+  intrabar_priority: stop_loss   # stop_loss | take_profit: which exit is assumed first when one candle touches both
+
+# Position sizing and protective orders
+risk:
+  position_sizing: risk     # risk = size from risk_per_trade and the stop distance | fixed = fixed_lots
+  risk_per_trade: 0.01      # 1% of account balance risked per trade
+  fixed_lots: 0.10          # used when position_sizing is fixed
+  min_lot: 0.01
+  lot_step: 0.01
+  max_lots: 50
+  max_leverage: 30          # caps position notional at balance x leverage
+
+  stop_loss:
+    mode: atr               # pips | atr | none
+    pips: 30                # used when mode is pips
+    atr_period: 14          # used when mode is atr
+    atr_multiplier: 2.0     # stop distance = ATR x multiplier
+
+  take_profit:
+    mode: risk_reward       # pips | atr | risk_reward | none
+    pips: 60                # used when mode is pips
+    atr_period: 14
+    atr_multiplier: 3.0     # used when mode is atr
+    risk_reward: 2.0        # target distance = stop distance x risk_reward
+
+# Strategies (see strategies/README.md)
+strategy:
+  active: ema_crossover     # ema_crossover | rsi_reversal
+  ema_crossover:
+    fast_period: 20
+    slow_period: 50
+    long_only: false
+  rsi_reversal:
+    period: 14
+    oversold: 30
+    overbought: 70
+    exit_level: 50
+    long_only: false
 
 reports:
   output_dir: reports

@@ -1,0 +1,19 @@
+# Streamlit settings for the ForexBot dashboard (used when running from the project root).
+
+[theme]
+base = "dark"
+primaryColor = "#3987e5"
+backgroundColor = "#0d0d0d"
+secondaryBackgroundColor = "#1a1a19"
+textColor = "#f0efec"
+font = "sans serif"
+
+[server]
+headless = false
+runOnSave = false
+
+[browser]
+gatherUsageStats = false
+
+[client]
+toolbarMode = "minimal"

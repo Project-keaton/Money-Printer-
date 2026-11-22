@@ -46,16 +46,20 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     config = load_config(args.config)
+    mode = args.mode or config.get("app", {}).get("mode", "backtest")
+
+    if mode == "backtest":
+        # The backtesting engine has its own CLI, logging and reports (see backtests/README.md).
+        from backtests.main import main as backtest_main
+
+        return backtest_main(["--config", str(args.config)])
+
     setup_logging(config)
     log = logging.getLogger("forexbot")
-
-    mode = args.mode or config.get("app", {}).get("mode", "backtest")
     log.info("Starting ForexBot in '%s' mode", mode)
 
-    # TODO: wire up data loading, strategy selection and execution for each mode.
-    if mode == "backtest":
-        log.info("Backtest engine not implemented yet.")
-    elif mode == "paper":
+    # TODO: paper and live trading.
+    if mode == "paper":
         log.info("Paper trading not implemented yet.")
     elif mode == "live":
         log.warning("Live trading not implemented yet.")

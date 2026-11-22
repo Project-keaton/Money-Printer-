@@ -1,0 +1,5 @@
+# Dashboard dependencies (Python 3.12+). Includes the backtester and data pipeline.
+-r ../backtests/requirements.txt
+-r ../data_pipeline/requirements.txt
+streamlit>=1.50
+plotly>=5.24
