@@ -1,0 +1,53 @@
+# ForexBot main configuration
+# Secrets (API keys, broker credentials) go in .env, NOT here.
+
+app:
+  name: ForexBot
+  mode: backtest            # backtest | paper | live
+  timezone: UTC
+
+logging:
+  level: INFO
+  app_log: logs/app.log
+  trade_log: logs/trades.log
+
+data:
+  source: yfinance
+  symbols:
+    - EURUSD=X
+    - GBPUSD=X
+    - USDJPY=X
+  timeframe: 1h
+  start_date: "2020-01-01"
+  end_date: null            # null = up to today
+  raw_dir: data/raw
+  processed_dir: data/processed
+
+database:
+  url: sqlite:///database/forexbot.db
+
+strategy:
+  active: ema_crossover
+  ema_crossover:
+    fast_period: 12
+    slow_period: 26
+  rsi:
+    period: 14
+    overbought: 70
+    oversold: 30
+
+risk:
+  initial_capital: 10000
+  risk_per_trade: 0.01      # 1% of equity per trade
+  max_open_trades: 3
+  stop_loss_pips: 30
+  take_profit_pips: 60
+
+backtest:
+  spread_pips: 1.0
+  commission_per_lot: 7.0
+  slippage_pips: 0.2
+  results_dir: backtests/results
+
+reports:
+  output_dir: reports

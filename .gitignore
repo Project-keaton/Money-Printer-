@@ -1,0 +1,70 @@
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ---------- Virtual environments ----------
+.venv/
+venv/
+env/
+ENV/
+
+# ---------- Secrets ----------
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# ---------- Testing / tooling caches ----------
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# ---------- Jupyter ----------
+.ipynb_checkpoints/
+
+# ---------- Logs ----------
+*.log
+logs/*
+!logs/README.md
+!logs/.gitkeep
+
+# ---------- Databases ----------
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
+# ---------- Data & generated output ----------
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+backtests/results/*
+!backtests/results/.gitkeep
+models/artifacts/*
+!models/artifacts/.gitkeep
+reports/*
+!reports/README.md
+!reports/.gitkeep
+
+# ---------- IDEs / editors ----------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ---------- OS ----------
+.DS_Store
+Thumbs.db
+desktop.ini
