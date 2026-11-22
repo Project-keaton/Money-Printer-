@@ -1,5 +1,10 @@
-# Dashboard dependencies (Python 3.12+). Includes the backtester and data pipeline.
--r ../backtests/requirements.txt
--r ../data_pipeline/requirements.txt
+# Dashboard dependencies (Python 3.12+). Includes what the backtester and data pipeline need.
+# Kept self-contained (no "-r ../" includes) so Streamlit Community Cloud installs it reliably.
 streamlit>=1.50
 plotly>=5.24
+pandas>=2.2
+numpy>=1.26
+matplotlib>=3.8
+pyyaml>=6.0
+requests>=2.31
+python-dotenv>=1.0
