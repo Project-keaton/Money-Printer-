@@ -9,7 +9,7 @@ textColor = "#f0efec"
 font = "sans serif"
 
 [server]
-headless = false
+headless = true  # never stop for the first-run email prompt (required on Streamlit Cloud)
 runOnSave = false
 
 [browser]
